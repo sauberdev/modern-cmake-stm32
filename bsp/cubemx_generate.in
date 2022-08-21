@@ -1,0 +1,4 @@
+config load ${IOC_PROJECT_FILE_PATH}
+project path ${GENERATED_CODE_ROOT_DIR}
+project generate
+exit
