@@ -59,7 +59,14 @@ set(DEVICE_FAMILY "STM32F4xx")
 - Specify device family using `DEVICE_FAMILY`, e.g.: `-DDEVICE_FAMILY=STM32F401xC`
 
 ### Build
-Just run CMake with configured variables specified above and afterward run make.
+To build the project, it's required to use toolchain file provided in `cmake`,
+so the command to build the project would look like:
+```bash
+mkdir build && cd build
+cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/gnu-arm-toolchain.cmake -DHW_TARGET=stm32f4_discovery -DDEVICE_FAMILY=STM32F401xC ../
+make all
+```
+
 It would generate `bsp` and `nice-bsp` libraries for the desired HW and
 the user firmware code may stay unchanged.
 
