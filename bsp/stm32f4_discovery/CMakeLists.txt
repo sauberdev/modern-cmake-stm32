@@ -1,2 +1,2 @@
-add_compile_definitions(STM32F407xx)
+add_compile_definitions(${DEVICE_FAMILY})
 set(DEVICE_FAMILY "STM32F4xx")

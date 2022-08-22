@@ -42,33 +42,26 @@ file(GLOB_RECURSE SOURCES
     FreeRTOS/*.c
     ${GENERATED_CODE_ROOT_DIR}/Core/*.c
     ${GENERATED_CODE_ROOT_DIR}/Middlewares/ST/STM32_USB_Device_Library/Core/*.c
+    ${GENERATED_CODE_ROOT_DIR}/Middlewares/Third_Party/*.c
     ${GENERATED_CODE_ROOT_DIR}/USB_DEVICE/Target/*.c
     ${GENERATED_CODE_ROOT_DIR}/*.s
 )
 
-# Exclude generated files which will be not used in a project
-# Exclude main.c and freertos.c as they are not used
-list(FILTER SOURCES EXCLUDE REGEX "main|freertos")
-
-# Collect sources which needs to be linked explicitly in order to provide
-# some interrupt handlers and methods overriding "weak" implementation
-file(GLOB_RECURSE BSP_SOURCE_TO_LINK_EXPLICIT
-    ${CMAKE_CURRENT_BINARY_DIR}/*hal_timebase_tim.c.obj
-    ${CMAKE_CURRENT_BINARY_DIR}/*_it.c.obj
+file (GLOB_RECURSE LINKER_SCRIPT
+        ${GENERATED_CODE_ROOT_DIR}/STM32*_FLASH.ld
 )
 
-set(BSP_SOURCE_TO_LINK_EXPLICIT "${BSP_SOURCE_TO_LINK_EXPLICIT}" CACHE INTERNAL BSP_SOURCE_TO_LINK_EXPLICIT FORCE)
+# Exclude generated files which will be not used in a project
+# Exclude main.c and freertos.c as they are not used
+list(FILTER SOURCES EXCLUDE REGEX "main|freertos|cmsis_os.c")
 
-add_library(${TARGET} ${SOURCES} ${LINKER_SCRIPT})
+add_library(${TARGET}
+    ${SOURCES}
+)
+
+target_link_libraries(${TARGET} PUBLIC -T${LINKER_SCRIPT})
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/${HW_TARGET}/CMakeLists.txt)
-
-foreach(dir ${SOURCES})
-    IF(IS_DIRECTORY ${dir})
-        add_subdirectory(${dir})
-    ELSE()
-        CONTINUE()
-    ENDIF()
-endforeach()
 
 target_include_directories(${TARGET}
     PUBLIC
@@ -78,10 +71,9 @@ target_include_directories(${TARGET}
         ${GENERATED_CODE_ROOT_DIR}/Drivers/*/Inc/Legacy
         ${GENERATED_CODE_ROOT_DIR}/Drivers/CMSIS/Device/ST/*/Include
         ${GENERATED_CODE_ROOT_DIR}/Drivers/CMSIS/Include
-        FreeRTOS/include
-        FreeRTOS/portable/GCC/ARM_CM3
+        ${GENERATED_CODE_ROOT_DIR}/Middlewares/Third_Party/FreeRTOS/Source/include
+        ${GENERATED_CODE_ROOT_DIR}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/
         ${CMAKE_CURRENT_SOURCE_DIR}/${HW_TARGET}
         ${GENERATED_CODE_ROOT_DIR}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc
         ${GENERATED_CODE_ROOT_DIR}/USB_DEVICE/Target
 )
-message("FreeRTOS" ${GENERATED_CODE_ROOT_DIR}/Drivers/*/Inc/Legacy)
