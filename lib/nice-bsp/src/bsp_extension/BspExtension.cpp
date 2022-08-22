@@ -2,11 +2,7 @@
 // Created by sauber on 12.04.20.
 //
 
-#include <FreeRTOS.h>
-#include <FreeRTOSConfig.h>
-#include <task.h>
-
-#include <stm32f4xx_hal.h>
+#include "nice-bsp/common/nice_bsp.h"
 
 /**
  * @brief Override weak implementation provided by BSP.

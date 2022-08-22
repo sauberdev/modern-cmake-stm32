@@ -5,8 +5,6 @@
 #include <FreeRTOSConfig.h>
 #include <task.h>
 
-#include <stm32f4xx_hal.h>
-
 #include "ClockManager.h"
 #include <nice-bsp/error/SystemErrorHandler.h>
 #include <nice-bsp/gpio/GPIO.h>
