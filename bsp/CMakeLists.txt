@@ -69,10 +69,11 @@ target_include_directories(${TARGET}
         ${GENERATED_CODE_ROOT_DIR}/Drivers/${DEVICE_FAMILY}_HAL_Driver/Inc
         ${GENERATED_CODE_ROOT_DIR}/Drivers/CMSIS/Device/ST/${DEVICE_FAMILY}/Include
         ${GENERATED_CODE_ROOT_DIR}/Drivers/*/Inc/Legacy
-        ${GENERATED_CODE_ROOT_DIR}/Drivers/CMSIS/Device/ST/*/Include
+        ${GENERATED_CODE_ROOT_DIR}/Drivers/CMSIS/Device/ST/${DEVICE_FAMILY}/Include
         ${GENERATED_CODE_ROOT_DIR}/Drivers/CMSIS/Include
         ${GENERATED_CODE_ROOT_DIR}/Middlewares/Third_Party/FreeRTOS/Source/include
         ${GENERATED_CODE_ROOT_DIR}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/
+        ${GENERATED_CODE_ROOT_DIR}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/
         ${CMAKE_CURRENT_SOURCE_DIR}/${HW_TARGET}
         ${GENERATED_CODE_ROOT_DIR}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc
         ${GENERATED_CODE_ROOT_DIR}/USB_DEVICE/Target
