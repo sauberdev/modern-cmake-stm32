@@ -39,7 +39,6 @@ abstracted from HW interface.
 ### How to add a new device
 
 - Create a new folder under `bsp` with a board name
-- Add `FreeRTOSConfig.h` as the configuration may vary depending on the board
 - Create a new project with `STM32CubeMX` for this board, configure
   and save target `*.ioc` under `bsp/board_name`
 - Provide a linker file for a new device under `linker_scripts`  
