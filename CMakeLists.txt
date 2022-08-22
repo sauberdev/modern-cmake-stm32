@@ -14,15 +14,25 @@ set(CMAKE_OBJCOPY arm-none-eabi-objcopy)
 set(CMAKE_OBJDUMP arm-none-eabi-objdump)
 set(SIZE arm-none-eabi-size)
 
-#Uncomment for hardware floating point
-SET(FPU_FLAGS "-mfloat-abi=hard -mfpu=fpv4-sp-d16")
-add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING)
+if (DEFINED DEVICE_FAMILY)
+    add_compile_definitions(${DEVICE_FAMILY})
+else()
+    message(FATAL_ERROR " DEVICE_FAMILY is not specified")
+endif()
 
-#Uncomment for software floating point
-#SET(FPU_FLAGS "-mfloat-abi=soft")
+if(${DEVICE_FAMILY} MATCHES "STM32F4[A-Z]*")
+    message("Enabling HW floating point")
+    SET(FPU_FLAGS "-mfloat-abi=hard -mfpu=fpv4-sp-d16")
+    add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING)
+    set(ARM_CORE "-mcpu=cortex-m4")
+else()
+    message("Enabling SW floating point")
+    SET(FPU_FLAGS "-mfloat-abi=soft")
+    set(ARM_CORE "-mcpu=cortex-m3")
+endif()
 
 SET(COMMON_FLAGS
-    "-mcpu=cortex-m4 ${FPU_FLAGS} -mthumb -mthumb-interwork -ffunction-sections -fdata-sections \
+    "${ARM_CORE} ${FPU_FLAGS} -mthumb -mthumb-interwork -ffunction-sections -fdata-sections \
     -g -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs")
 
 SET(CMAKE_CXX_FLAGS_INIT "${COMMON_FLAGS} -std=c++14")
@@ -36,11 +46,7 @@ set(CMAKE_CXX_STANDARD 14)
 # TODO: HW specific part
 #add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING -D__FPU_PRESENT=1)
 add_definitions(-DUSE_HAL_DRIVER)
-if (DEFINED DEVICE_FAMILY)
-    add_compile_definitions(${DEVICE_FAMILY})
-else()
-    message(FATAL_ERROR " DEVICE_FAMILY is not specified")
-endif()
+
 
 # Define BSP library name
 if (DEFINED HW_TARGET)
