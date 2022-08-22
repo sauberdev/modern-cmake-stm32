@@ -1,5 +1,5 @@
 # modern-cmake-stm32
-Small project to demonstrate how to develop SW for STM32 MCU's using modern CMake and CubeMX
+Small project to demonstrate how to develop SW for STM32 MCU's using modern CMake and CubeMX.
 
 ## Description
 This project aims to demonstrate how the modern CMake and STM32CubeMX
@@ -28,7 +28,8 @@ providing a convenient C++ API.
 
 ### User firmware
 User firmware is the last layer of the project. It doesn't use directly
-`bsp` layer, but already consuming C++ API's coming from `nice-bsp` layer.
+`bsp` layer, but already consuming C++ API's coming from `nice-bsp` layer and in that way
+abstracted from HW interface.
 
 ## Dependencies
 - STM32CubeMX
@@ -56,8 +57,20 @@ set(DEVICE_FAMILY "STM32F4xx")
 - Specify desired device via CMake variable `HW_TARGET`, e.g.:
 `-DHW_TARGET=stm32f4_discovery`
 - Set path to STM32CubeMX generator via CMake variable `STM32CUBEMX_GENERATOR_PATH`
+- Specify device family using `DEVICE_FAMILY`, e.g.: `-DDEVICE_FAMILY=STM32F401xC`
 
 ### Build
 Just run CMake with configured variables specified above and afterward run make.
 It would generate `bsp` and `nice-bsp` libraries for the desired HW and
 the user firmware code may stay unchanged.
+
+## Flash&Debug with OpenOCD
+
+### STM32F2xx
+- Select as a board config file `board/stm3220g_eval_stlink.cfg`
+- Replace there `reset_config srst_only` with `reset_config none separate`
+- Now you should be able to flash and debug source code
+
+To debug peripherals you may need SVD file for used processor:
+
+- For STM32F20xx it's located under `svd\STM32F20x.svd`

@@ -14,24 +14,20 @@ set(CMAKE_OBJCOPY arm-none-eabi-objcopy)
 set(CMAKE_OBJDUMP arm-none-eabi-objdump)
 set(SIZE arm-none-eabi-size)
 
-
-# TODO: In dependency on selected chip and build type choose one from linker_scripts
-SET(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/linker_scripts/STM32F205RETx_FLASH.ld)
-
 #Uncomment for hardware floating point
-#SET(FPU_FLAGS "-mfloat-abi=hard -mfpu=fpv4-sp-d16")
-#add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING -D__FPU_PRESENT=1)
+SET(FPU_FLAGS "-mfloat-abi=hard -mfpu=fpv4-sp-d16")
+add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING)
 
 #Uncomment for software floating point
-SET(FPU_FLAGS "-mfloat-abi=soft")
+#SET(FPU_FLAGS "-mfloat-abi=soft")
 
 SET(COMMON_FLAGS
-    "-mcpu=cortex-m3 ${FPU_FLAGS} -mthumb -mthumb-interwork -ffunction-sections -fdata-sections \
+    "-mcpu=cortex-m4 ${FPU_FLAGS} -mthumb -mthumb-interwork -ffunction-sections -fdata-sections \
     -g -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs")
 
 SET(CMAKE_CXX_FLAGS_INIT "${COMMON_FLAGS} -std=c++14")
 SET(CMAKE_C_FLAGS_INIT "${COMMON_FLAGS} -std=gnu11")
-SET(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,-gc-sections,--print-memory-usage -T ${LINKER_SCRIPT}")
+#SET(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,-gc-sections,--print-memory-usage -T ${LINKER_SCRIPT}")
 
 PROJECT(modern-cmake-stm32 C CXX ASM)
 
@@ -40,6 +36,11 @@ set(CMAKE_CXX_STANDARD 14)
 # TODO: HW specific part
 #add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING -D__FPU_PRESENT=1)
 add_definitions(-DUSE_HAL_DRIVER)
+if (DEFINED DEVICE_FAMILY)
+    add_compile_definitions(${DEVICE_FAMILY})
+else()
+    message(FATAL_ERROR " DEVICE_FAMILY is not specified")
+endif()
 
 # Define BSP library name
 if (DEFINED HW_TARGET)
@@ -49,3 +50,5 @@ else()
 endif()
 
 add_subdirectory(bsp)
+add_subdirectory(lib/nice-bsp)
+add_subdirectory(src)
